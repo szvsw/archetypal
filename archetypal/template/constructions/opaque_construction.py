@@ -31,19 +31,7 @@ class OpaqueConstruction(LayeredConstruction):
         * solar_reflectance_index
     """
 
-    __slots__ = ("area",)
-
-    def __init__(self, Name, Layers, **kwargs):
-        """Initialize an OpaqueConstruction.
-
-        Args:
-            Layers (list of archetypal.MaterialLayer): List of MaterialLayers making
-                up the construction.
-            **kwargs: Other attributes passed to parent constructors such as
-                :class:`ConstructionBase`.
-        """
-        super(OpaqueConstruction, self).__init__(Name, Layers, **kwargs)
-        self.area = 1
+    area: float = 1
 
     @property
     def r_value(self):
@@ -417,8 +405,13 @@ class OpaqueConstruction(LayeredConstruction):
             epbunch (EpBunch): The epbunch object.
             **kwargs: keywords passed to the LayeredConstruction constructor.
         """
-        assert epbunch.key.lower() in ("internalmass", "construction", 'construction:internalsource'), (
-            f"Expected ('Internalmass', 'Construction', 'construction:internalsouce')." f"Got '{epbunch.key}'."
+        assert epbunch.key.lower() in (
+            "internalmass",
+            "construction",
+            "construction:internalsource",
+        ), (
+            f"Expected ('Internalmass', 'Construction', 'construction:internalsouce')."
+            f"Got '{epbunch.key}'."
         )
         name = epbunch.Name
 
@@ -426,7 +419,10 @@ class OpaqueConstruction(LayeredConstruction):
         if epbunch.key.lower() == "internalmass":
             layers = cls._internalmass_layer(epbunch)
             return cls(Name=name, Layers=layers, **kwargs)
-        elif epbunch.key.lower() in ("construction", 'construction:internalsource',):
+        elif epbunch.key.lower() in (
+            "construction",
+            "construction:internalsource",
+        ):
             layers = cls._surface_layers(epbunch)
             return cls(Name=name, Layers=layers, **kwargs)
 
