@@ -504,7 +504,7 @@ class MetaData(UserSet):
 class UniqueName(str):
     """Attribute unique user-defined names for :class:`UmiBase`."""
 
-    existing = set()
+    existing = {}
 
     def __new__(cls, content):
         """Pick a name. Will increment the name if already used."""
@@ -522,17 +522,9 @@ class UniqueName(str):
         if not name:
             return None
         if name not in cls.existing:
-            cls.existing.add(name)
-            return name
+            cls.existing[name] = 0
+            return f'${name}'
         else:
-            match = re.match(r"^(.*?)(\D*)(\d+)$", name)
-            if match:
-                groups = list(match.groups())
-                pad = len(groups[-1])
-                groups[-1] = int(groups[-1])
-                groups[-1] += 1
-                groups[-1] = str(groups[-1]).zfill(pad)
-                name = "".join(map(str, groups))
-                return cls.create_unique(name)
-            else:
-                return cls.create_unique(name + "_1")
+            current_count = cls.existing[name]
+            cls.existing[name] = current_count+1
+            return f'${name}_${current_count+1}'
