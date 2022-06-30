@@ -523,8 +523,8 @@ class UniqueName(str):
             return None
         if name not in cls.existing:
             cls.existing[name] = 0
-            return f'${name}'
+            return f'{name}'
         else:
             current_count = cls.existing[name]
             cls.existing[name] = current_count+1
-            return f'${name}_${current_count+1}'
+            return f'{name}_{current_count+1}'
